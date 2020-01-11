@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+#    gopro-reorder  Copyright (c) 2020  Patrick M. Brennan
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+# Helper function - accepts a filename (with or without path) and
+# returns the new identifier component (without path or extension).
+new_fileid() {
+  echo $@ | sed 's/.*G\(H\|X\|L\)\([0-9][0-9]\)\([0-9][0-9][0-9][0-9]\)\.\(LRV\|MP4\|THM\)$/G\3_\2_\1.\4/'
+}
+export -f new_fileid
+
+# Helper function to move/rename full-res video files.
+proc_mp4() {
+  # Copy file into destination directory with new ID.
+  mv -vi "${@}" $(new_fileid "${@}")
+}
+export -f proc_mp4
+
+# Copy all full-res videos to videos folder with their new ID.
+echo "===> [$(date --rfc-3339=seconds)] Importing full resolution MP4 files..."
+find . -type 'f' -name 'G*\.MP4' -exec bash -c 'proc_mp4 "$0"' {} \;
+find . -type 'f' -name 'G*\.THM' -exec bash -c 'proc_mp4 "$0"' {} \;
+find . -type 'f' -name 'G*\.LRV' -exec bash -c 'proc_mp4 "$0"' {} \;
+echo "===> [$(date --rfc-3339=seconds)] MP4 import complete."
+
+exit 0
