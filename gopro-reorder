@@ -19,7 +19,7 @@
 # Helper function - accepts a filename (with or without path) and
 # returns the new identifier component (without path or extension).
 new_fileid() {
-  echo $@ | sed 's/.*G\(H\|X\|L\|S\)\([0-9][0-9]\)\([0-9][0-9][0-9][0-9]\)\.\(LRV\|MP4\|THM\|360\)$/G\3_\2_\1.\4/'
+  echo $@ | sed 's/.*G\(H\|X\|L\|S\)\([0-9][0-9]\)\([0-9][0-9][0-9][0-9]\)\.\(LRV\|MP4\|THM\|360\|WAV\)$/G\3_\2_\1.\4/'
 }
 export -f new_fileid
 
